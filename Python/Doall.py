@@ -4,6 +4,7 @@ import os
 import sys
 import subprocess
 
+
 cur_path=os.path.split(sys.argv[0])[0]
 
 files=os.listdir(cur_path)
