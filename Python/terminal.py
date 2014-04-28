@@ -4,6 +4,7 @@ import string
 import random
 import time
 import threading
+import sys
 
 class terminal:
 	___imei=''
@@ -43,16 +44,19 @@ class terminal:
 				break
 
 	def login(self):
-		self.__sock.send("$LOGIN:"+self.__imei+":DK-PE100:DKP-PEV1.0\r\n")
-		time.sleep(0.5)
+                try:
+                    self.__sock.send("$LOGIN:"+self.__imei+":DK-PE100:DKP-PEV1.0\r\n") 
+                    time.sleep(0.5)
+                except KeyboardInterrupt:
+                    sys.exit()
 
 	def heartbeat(self):
 		self.__sock.send("$HSTAT:"+self.__imei+"::"+str(self.__batt)+"\r\n")
 		time.sleep(0.5)
 
 def main():
-	ter=terminal("1111", "127.0.0.1", 5555)
+	ter=terminal("1111", "127.0.0.1", 5005)
 	while True:
-		ter.login()
+            ter.login()
 if __name__=="__main__":
 	main()
