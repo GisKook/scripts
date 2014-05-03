@@ -53,10 +53,3 @@ class terminal:
 	def heartbeat(self):
 		self.__sock.send("$HSTAT:"+self.__imei+"::"+str(self.__batt)+"\r\n")
 		time.sleep(0.5)
-
-def main():
-	ter=terminal("1111", "127.0.0.1", 5005)
-	while True:
-            ter.login()
-if __name__=="__main__":
-	main()
