@@ -14,7 +14,7 @@ def CalcCheckSum(buf):
         return sum
 
 def BuildMsg(mobile,content):
-    result=bytearray('$DXFS')
+    result=bytearray('')
     result.insert(len(result),0) 
     result.insert(len(result),0)
     result.insert(len(result),0)
@@ -61,7 +61,7 @@ def BuildMsg(mobile,content):
 mobiles=sys.argv[1]
 content=sys.argv[2]
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(('111.11.26.214', 50038))
+sock.connect(('', ))
 
 res =BuildMsg(mobiles,content)
 print res
