@@ -13,6 +13,7 @@ if(len(sys.argv)<2):
 	'''
 	sys.exit()
 file_ext=sys.argv[1]
+shfiledir = os.path.dirname(sys.argv[0]);
 if(file_ext[0]!='.'):
 	file_ext="."+file_ext;
 des_folder="./"
@@ -22,8 +23,7 @@ des_folder=os.path.abspath(des_folder)
 files=os.listdir(des_folder)
 for i in files:
 	if(os.path.splitext(i)[1]==file_ext):
-		args="< "+i+" > "+i+"_t"
-		returncode=subprocess.call(["sh","CNChangeCharset.sh",i,i+"_t"])
+		returncode=subprocess.call(["sh",shfiledir+"/CNChangeCharset.sh",i,i+"_t"])
 		if returncode == 0:
 			os.remove(i)
 			os.rename(i+"_t",i)
