@@ -9,7 +9,7 @@ from threading import Thread
 # port = sys.argv[2]
 ipaddr = "192.168.1.115"
 port = "10000"
-socket_count = 1
+socket_count = 2000
 
 imeis = []
 file_content = file("E:/Code/scripts/Python/sender/imei.txt", "r")
@@ -23,7 +23,7 @@ socket_buf = []
 def send_login(sockets_count):
     for i in range(sockets_count):
         imei = genimei()
-        print "$LOGIN:"+imei+":DK-PE100:DKP-PEV1.0\r\n"
+        # print "$LOGIN:"+imei+":DK-PE100:DKP-PEV1.0\r\n"
         sockets[i].send("$LOGIN:"+imei+":DK-PE100:DKP-PEV1.0\r\n")
 
 def create_socket(sockets_count):
@@ -36,7 +36,7 @@ def connect_sockets(sockets_count):
 
 def send_heartbeat(socketindex, imei):
     sockets[socketindex].send("$HSTAT:"+imei+":0::99\r\n")
-    print "$HSTAT:"+imei+":0::99\r\n"
+    # print "$HSTAT:"+imei+":0::99\r\n"
 
 #for i in range(4):
 #    thread = Thread(target=sendmsg)
@@ -64,12 +64,16 @@ def send_position(socketindex, imei):
         second = "0"+second
 
     timelabel = "{0}{1}{2}-{3}{4}{5}".format(year, month, day, hour, minute, second)
-    print "$POSUP:"+imei+":"+timelabel+":97:78:1:0:0:114.364204,38.057495\r\n"
+    # print "$POSUP:"+imei+":"+timelabel+":97:78:1:0:0:114.364204,38.057495\r\n"
 
     sockets[socketindex].send("$POSUP:"+imei+":"+timelabel+":97:78:1:0:0:114.364204,38.057495\r\n")
 
 def thread_reportposition():
+    first_reportposition = 1
     while True:
+        if first_reportposition == 1:
+            time.sleep(10)
+            first_reportposition = 2
         time.sleep(5)
         for i in range(0,socket_count):
             send_position(i, imeis[i])
@@ -80,7 +84,7 @@ send_login(socket_count)
 
 for i in range(0,socket_count):
     socket_buf.append("")
-
+time.sleep(1)
 thread = Thread(target = thread_reportposition)
 
 thread.start()
@@ -93,16 +97,16 @@ while True:
         if end != -1:
             buf = socket_buf[i][start:end]
             socket_buf[i] = socket_buf[i][end:]
-            print buf
             if len(buf) > 25:
                 if buf.find("$LOGRT") != -1:
-                    if buf[24] == '1':
-                        print buf.strip("$LOGRT").strip("::1\r\n") + " login sucess"
-                    else:
-                        print buf.strip("$LOGRT").strip("::0\r\n") + " login error"
+                    print buf
+                    # if buf[24] == '1':
+                    #     print buf.strip("$LOGRT").strip("::1\r\n") + " login sucess"
+                    # else:
+                    #     print buf.strip("$LOGRT").strip("::0\r\n") + " login error"
                 if buf.find("$HCHECK") != -1:
                     send_heartbeat(i, buf[8:23])
-                if buf.find("$POSP") != -1:
+                if buf.find("POSP") != -1:
                     print buf[6:21] + "recv position reply"
 
 time.sleep(2)
