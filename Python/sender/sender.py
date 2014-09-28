@@ -7,9 +7,9 @@ from threading import Thread
 
 # ipaddr = sys.argv[1]
 # port = sys.argv[2]
-ipaddr = "127.0.0.1"
+ipaddr = "192.168.1.115"
 port = "10000"
-socket_count = 2000
+socket_count = 1
 
 imeis = []
 file_content = file("E:/Code/scripts/Python/sender/imei.txt", "r")
@@ -22,8 +22,9 @@ sockets = []
 socket_buf = []
 def send_login(sockets_count):
     for i in range(sockets_count):
-        print "$LOGIN:"+str(genimei())+":DK-PE100:DKP-PEV1.0\r\n"
-        sockets[i].send("$LOGIN:"+str(genimei())+":DK-PE100:DKP-PEV1.0\r\n")
+        imei = genimei()
+        print "$LOGIN:"+imei+":DK-PE100:DKP-PEV1.0\r\n"
+        sockets[i].send("$LOGIN:"+imei+":DK-PE100:DKP-PEV1.0\r\n")
 
 def create_socket(sockets_count):
     for i in range(sockets_count):
@@ -101,8 +102,8 @@ while True:
                         print buf.strip("$LOGRT").strip("::0\r\n") + " login error"
                 if buf.find("$HCHECK") != -1:
                     send_heartbeat(i, buf[8:23])
-        else:
-            print socket_buf[i]
+                if buf.find("$POSP") != -1:
+                    print buf[6:21] + "recv position reply"
 
 time.sleep(2)
 print time.clock()-starttime
