@@ -5,18 +5,25 @@ import string
 import time
 from threading import Thread
 
-ipaddr = sys.argv[1]
-port = sys.argv[2]
+# ipaddr = sys.argv[1]
+# port = sys.argv[2]
+ipaddr = "127.0.0.1"
+port = "10000"
+socket_count = 2000
 
+imeis = []
+file_content = file("E:/Code/scripts/Python/sender/imei.txt", "r")
 def genimei():
-    return random.randrange(100000000000000,999999999999999)
+    imei = file_content.readline()
+    imeis.append(string.strip(imei, "\r\n"))
+    return string.strip(imei, "\r\n")
 
-sockets  =[]
-def send_msg(sockets_count):
+sockets = []
+socket_buf = []
+def send_login(sockets_count):
     for i in range(sockets_count):
+        print "$LOGIN:"+str(genimei())+":DK-PE100:DKP-PEV1.0\r\n"
         sockets[i].send("$LOGIN:"+str(genimei())+":DK-PE100:DKP-PEV1.0\r\n")
-        time.sleep(1)
-
 
 def create_socket(sockets_count):
     for i in range(sockets_count):
@@ -24,17 +31,78 @@ def create_socket(sockets_count):
 
 def connect_sockets(sockets_count):
     for i in range(sockets_count):
-        print "connect "
         sockets[i].connect((ipaddr, string.atoi(port)))
 
-starttime=time.clock()
+def send_heartbeat(socketindex, imei):
+    sockets[socketindex].send("$HSTAT:"+imei+":0::99\r\n")
+    print "$HSTAT:"+imei+":0::99\r\n"
+
 #for i in range(4):
 #    thread = Thread(target=sendmsg)
 #    thread.start()
 #    thread.join()
 #    thread.exit()
-create_socket(400)
-connect_sockets(400)
-send_msg(400)
+#     $POSUP:000000000036398:140928-095451:97:79:1:0:0:114.364204,38.057495
+def send_position(socketindex, imei):
+    curtime = time.localtime()
+    year = str(curtime.tm_year - 2000)
+    month = str(curtime.tm_mon)
+    if len(month) == 1:
+        month = "0"+month
+    day = str(curtime.tm_mday)
+    if len(day) == 1:
+        day = "0"+day
+    hour = str(curtime.tm_hour)
+    if len(hour) == 1:
+        hour = "0"+hour
+    minute = str(curtime.tm_min)
+    if len(minute) == 1:
+        minute = "0"+minute
+    second = str(curtime.tm_sec)
+    if len(second) == 1:
+        second = "0"+second
+
+    timelabel = "{0}{1}{2}-{3}{4}{5}".format(year, month, day, hour, minute, second)
+    print "$POSUP:"+imei+":"+timelabel+":97:78:1:0:0:114.364204,38.057495\r\n"
+
+    sockets[socketindex].send("$POSUP:"+imei+":"+timelabel+":97:78:1:0:0:114.364204,38.057495\r\n")
+
+def thread_reportposition():
+    while True:
+        time.sleep(5)
+        for i in range(0,socket_count):
+            send_position(i, imeis[i])
+
+create_socket(socket_count)
+connect_sockets(socket_count)
+send_login(socket_count)
+
+for i in range(0,socket_count):
+    socket_buf.append("")
+
+thread = Thread(target = thread_reportposition)
+
+thread.start()
+
+while True:
+    for i in range(0,socket_count):
+        socket_buf[i] = sockets[i].recv(128)
+        start = socket_buf[i].find('$')
+        end = socket_buf[i].find('\r\n')
+        if end != -1:
+            buf = socket_buf[i][start:end]
+            socket_buf[i] = socket_buf[i][end:]
+            print buf
+            if len(buf) > 25:
+                if buf.find("$LOGRT") != -1:
+                    if buf[24] == '1':
+                        print buf.strip("$LOGRT").strip("::1\r\n") + " login sucess"
+                    else:
+                        print buf.strip("$LOGRT").strip("::0\r\n") + " login error"
+                if buf.find("$HCHECK") != -1:
+                    send_heartbeat(i, buf[8:23])
+        else:
+            print socket_buf[i]
+
 time.sleep(2)
 print time.clock()-starttime
