@@ -40,7 +40,7 @@ def main():
         if line.find(processname) != -1: 
             pid = line.split(" ")[5]
             subprocess.call(["kill",pid])
-            havapid = 1
+            havepid = 1
             print "kill this pid "+processname+"*"
     if havepid == 0:
         print "not find \"python "+processname+"*"
