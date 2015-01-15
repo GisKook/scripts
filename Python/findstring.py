@@ -20,24 +20,26 @@ if len(sys.argv)==4:
 
 #从单个文件中查找目标内容，如果找到则显示
 def find_string(filename):
-    src_file=file(filename,"r")
-    i=0
-    while True:
-        line=src_file.readline();
-        i=i+1
-        if len(line)==0:
-            src_file.close();
-            break
-        index=line.find(tobe_find)
-        if -1!=index:
-            if int(complete_match)==1:
-                
-                if (line[index-1] not in string.ascii_letters) and (line[index+len(tobe_find)] not in string.ascii_letters):
+    ext = os.path.splitext(filename)
+    if ext[1]=='.h' or ext[1]=='.c' or ext[1]=='.cpp':
+        src_file=file(filename,"r")
+        i=0
+        while True:
+            line=src_file.readline();
+            i=i+1
+            if len(line)==0:
+                src_file.close();
+                break
+            index=line.find(tobe_find)
+            if -1!=index:
+                if int(complete_match)==1:
+                    
+                    if (line[index-1] not in string.ascii_letters) and (line[index+len(tobe_find)] not in string.ascii_letters):
+                        print filename
+                        print line[0:len(line)-1] + "  ->linenum: %d " %(i) 
+                else:
                     print filename
                     print line[0:len(line)-1] + "  ->linenum: %d " %(i) 
-            else:
-                print filename
-                print line[0:len(line)-1] + "  ->linenum: %d " %(i) 
 
 def find_string_infolder(folder_path):
     files=os.listdir(folder_path)

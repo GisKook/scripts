@@ -1,0 +1,51 @@
+message Communication{
+	optional uint32 messageform = 1;
+	optional uint32 messagecategory = 2;
+	optional uint32 encryption = 3;
+	optional uint32 sendaddr = 4;
+	optional uint32 recvaddr = 5;
+	optional uint32 sendtime_hour = 6;
+	optional uint32 sendtime_minute = 7;
+	optional uint32 sendtime_second = 8;
+	optional uint32 messagelength = 9;
+	optional bytes key = 10;
+	optional bytes messagebuffer = 11;
+}
+
+message Positioninfo{
+	optional uint32 userid = 1;
+	optional uint32 encryption = 2;
+	optional uint32 accuracy = 3;
+	optional uint32 emergencypostion = 4;
+	optional uint32 multivaluesolution = 5;
+	optional bytes key = 6;
+	optional uint32 applaytime_hour = 7;
+	optional uint32 applaytime_minute = 8;
+	optional uint32 applaytime_second = 9;
+	optional uint32 applaytime_tenths = 10;
+	optional uint32 longitude_degree = 11;
+	optional uint32 longitude_minute = 12;
+	optional uint32 longitude_second = 13;
+	optional uint32 longitude_tenths = 14;
+	optional uint32 latitude_degree = 15;
+	optional uint32 latitude_minute = 16;
+	optional uint32 latitude_second = 17;
+	optional uint32 latitude_tenths = 18;
+	optional int32 geodeticheight = 19;
+	optional int32 detlaelevation = 20;
+}
+
+message Communicationreceipt{
+	optional uint32 sendaddr = 1;
+	optional uint32 recvaddr = 2;
+	optional uint32 receipttime_hour = 3;
+	optional uint32 receipttime_minute = 4;
+	optional uint32 receipttime_second = 5;
+}
+
+message Beidoumessage{
+	optional uint32 messagetype = 1;
+	optional Communication commuincation = 2;
+	optional Communicationreceipt communicationreceipt = 3;
+	optional Positioninfo positioninfo = 4;
+}
