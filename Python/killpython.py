@@ -38,10 +38,12 @@ def main():
     havepid = 0
     for line in buf:
         if line.find(processname) != -1: 
-            pid = line.split(" ")[5]
-            subprocess.call(["kill",pid])
-            havepid = 1
-            print "kill this pid "+processname+"*"
+            for pid in line.split(" "):
+                if pid.isdigit(): 
+                    subprocess.call(["kill",pid])
+                    havepid = 1
+                    print "kill this pid "+processname+"*   " + line
+                    break
     if havepid == 0:
         print "not find \"python "+processname+"*"
 
