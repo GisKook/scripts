@@ -56,6 +56,9 @@ def reqfunc(sock, index):
 def recvmsg(sock,event):
     while True:
         message = sock.recv(256)
+        if message.find("$DWXX") != -1:
+            print "find position message."
+            print binascii.hexlify(message)
         if message[0:5] == "$ZCFH":
             result = struct.unpack('B', message[19])
             result = int(result[0])
@@ -74,10 +77,13 @@ def recvmsg(sock,event):
             else:
                 print "recv a error login feedback message."
                 return 4
-        elif message[0:5] == "$XTYD":
-            print "recv heart beat"
-        elif message[0:5] == "$FSFK":
-            print "recv feedback message"
+#       elif message[0:5] == "$XTYD":
+#           print "recv heart beat"
+#       elif message[0:5] == "$FSFK":
+#            print "recv feedback message"
+#            print binascii.hexlify(message)
+        elif message[0:5] == "$DWXX":
+            print "recv position message"
         else:
             sys.stdout.write("..............")
             print binascii.hexlify(message)
