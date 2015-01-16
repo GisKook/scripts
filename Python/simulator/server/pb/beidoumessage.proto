@@ -19,10 +19,10 @@ message Positioninfo{
 	optional uint32 emergencypostion = 4;
 	optional uint32 multivaluesolution = 5;
 	optional bytes key = 6;
-	optional uint32 applaytime_hour = 7;
-	optional uint32 applaytime_minute = 8;
-	optional uint32 applaytime_second = 9;
-	optional uint32 applaytime_tenths = 10;
+	optional uint32 applytime_hour = 7;
+	optional uint32 applytime_minute = 8;
+	optional uint32 applytime_second = 9;
+	optional uint32 applytime_tenths = 10;
 	optional uint32 longitude_degree = 11;
 	optional uint32 longitude_minute = 12;
 	optional uint32 longitude_second = 13;
