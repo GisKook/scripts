@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='smsTx.proto',
   package='',
-  serialized_pb='\n\x0bsmsTx.proto\"\x81\x01\n\x07\x42\x64\x66sMsg\x12\x11\n\tnSerialId\x18\x01 \x02(\r\x12\x16\n\x0enSourceAddress\x18\x02 \x02(\r\x12\x14\n\x0cnDestAddress\x18\x03 \x02(\r\x12\x10\n\x08nMsgType\x18\x04 \x02(\r\x12\x10\n\x08nInfoLen\x18\x05 \x02(\r\x12\x11\n\tsInfoBuff\x18\x06 \x02(\t\"*\n\x07\x46sfkMsg\x12\x11\n\tnSerialId\x18\x01 \x02(\r\x12\x0c\n\x04nRes\x18\x02 \x02(\r')
+  serialized_pb='\n\x0bsmsTx.proto\"\x81\x01\n\x07\x42\x64\x66sMsg\x12\x11\n\tnSerialId\x18\x01 \x02(\r\x12\x16\n\x0enSourceAddress\x18\x02 \x02(\r\x12\x14\n\x0cnDestAddress\x18\x03 \x02(\r\x12\x10\n\x08nMsgType\x18\x04 \x02(\r\x12\x10\n\x08nInfoLen\x18\x05 \x02(\r\x12\x11\n\tsInfoBuff\x18\x06 \x02(\x0c\"*\n\x07\x46sfkMsg\x12\x11\n\tnSerialId\x18\x01 \x02(\r\x12\x0c\n\x04nRes\x18\x02 \x02(\r')
 
 
 
@@ -62,8 +62,8 @@ _BDFSMSG = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='sInfoBuff', full_name='BdfsMsg.sInfoBuff', index=5,
-      number=6, type=9, cpp_type=9, label=2,
-      has_default_value=False, default_value=unicode("", "utf-8"),
+      number=6, type=12, cpp_type=9, label=2,
+      has_default_value=False, default_value="",
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),

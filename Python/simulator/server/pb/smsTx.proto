@@ -5,7 +5,7 @@ message BdfsMsg
 	required uint32 nDestAddress = 3;
 	required uint32 nMsgType = 4;
 	required uint32 nInfoLen = 5;
-	required string sInfoBuff = 6;
+	required bytes sInfoBuff = 6;
 }
 message FsfkMsg
 {

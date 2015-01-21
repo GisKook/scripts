@@ -9,16 +9,17 @@ from threading import Event
 import time
 import binascii
 
-if len(sys.argv) < 3:
+if len(sys.argv) < 4:
     print '''
-        need login and password
+        need login ,password, cardid
         usage:
-            client.py login password
+            client.py login password cardid
     '''
     exit()
 
 login = sys.argv[1]
 password = sys.argv[2]
+cardid = sys.argv[3]
 ipaddr="192.168.1.155"
 port = "40000"
 
@@ -46,7 +47,7 @@ def heartbeat(sock, login):
 
 def reqfunc(sock, index):
     format = "> 5sHIIIBH5s"
-    bytes = bytearray(struct.pack(format, "$BDFS", 28,index, 310732, 0, 1,5,"cetcn"))
+    bytes = bytearray(struct.pack(format, "$BDFS", 28,index, int(cardid), 0, 1,5,"cetcn"))
     sum = calcchecksum(bytes)
     bytes.append(sum)
     sys.stdout.write("send request ")
@@ -58,7 +59,14 @@ def recvmsg(sock,event):
         message = sock.recv(256)
         if message.find("$DWXX") != -1:
             print "find position message."
+        elif message.find("$XTYD") != -1:
+            print "recv heart beat"
+        elif message.find("$FSFK") != -1:
+            print "recv feedback message."
+        else:
+            sys.stdout.write(".........")
             print binascii.hexlify(message)
+
         if message[0:5] == "$ZCFH":
             result = struct.unpack('B', message[19])
             result = int(result[0])
@@ -77,16 +85,15 @@ def recvmsg(sock,event):
             else:
                 print "recv a error login feedback message."
                 return 4
-#       elif message[0:5] == "$XTYD":
-#           print "recv heart beat"
-#       elif message[0:5] == "$FSFK":
+#        elif message[0:5] == "$XTYD":
+#           print " recv heart beat" 
+#        elif message[0:5] == "$FSFK":
 #            print "recv feedback message"
+#        elif message[0:5] == "$DWXX":
+#            print "recv position message"
+#        else:
+#            sys.stdout.write("..............")
 #            print binascii.hexlify(message)
-        elif message[0:5] == "$DWXX":
-            print "recv position message"
-        else:
-            sys.stdout.write("..............")
-            print binascii.hexlify(message)
 
         time.sleep(1)
 
@@ -110,8 +117,8 @@ def main():
         exit()
 
     event = Event()
-    threadlogin = Thread(target=recvmsg, args=(sock,event))
-    threadlogin.start() 
+    threadrecv= Thread(target=recvmsg, args=(sock,event))
+    threadrecv.start() 
     loginfunc(sock, login, password)
 
     loginresult = event.wait(20)
@@ -123,7 +130,7 @@ def main():
         threadheart.join()
         threadreq.join()
 
-    threadlogin.join()
+    threadrecv.join()
 
 if __name__ == "__main__":
     main()

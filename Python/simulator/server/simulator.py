@@ -94,9 +94,9 @@ def main():
     socket.connect("tcp://192.168.1.155:18888")
     socketpub = context.socket(zmq.PUB)
     socketpub.bind("tcp://*:18889")
-    threadbeidourecv = Thread(target=beidoumessagerecvier, args=(socketpub,))
-    threadbeidourecv.start() 
-    threadbeidourecv.deamon = True
+    #threadbeidourecv = Thread(target=beidoumessagerecvier, args=(socketpub,))
+    #threadbeidourecv.start() 
+    #threadbeidourecv.deamon = True
 
     while True:
         data = socket.recv()
@@ -120,7 +120,7 @@ def main():
                 socketpub.send(feedback)
                 print 'ok you can post the message now.'
             elif message.nRecvType == bcTx_pb2.BsTxMsg.KFQQ:
-                print 'charge it !!!!'
+                print 'charge it !!!! %s' % message.kfqqMsg.sQtsentid
 
         elif recvtype == 2: # real message
             sendmessage = smsTx_pb2.BdfsMsg()
@@ -132,7 +132,8 @@ def main():
             format = '> 20sH%ds' % len(strsendmessagefeedback)
             feedback = struct.pack(format, 'send', len(strsendmessagefeedback),strsendmessagefeedback)
             socketpub.send(feedback)
-            print 'the message has been posted successfully.'
+            #print 'the message has been posted successfully.'
+            print 'message id %d' % authfeedback.nAuthenticationId
             
 if __name__ == "__main__":
 	main();
