@@ -100,7 +100,7 @@ def recvmsg(sock,event):
 def heart(sock,login):
     while True: 
         heartbeat(sock, login)
-        time.sleep(5)
+        time.sleep(20)
 
 def req(sock):
     index = 0
