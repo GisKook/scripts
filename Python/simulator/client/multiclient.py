@@ -4,14 +4,15 @@ import sys
 import subprocess
 import threading 
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     print '''
-    need a client count.
-    python multiclient.py clientcount
+    need a client count, beiginindex
+    python multiclient.py clientcount clientbeginindex
     '''
     exit()
 
 clientcount = sys.argv[1]
+clientbeginindex = sys.argv[2]
 
 def execclient(index):
     conffile = file("./conf","r")
@@ -30,7 +31,7 @@ def execclient(index):
 def main():
     threads = []
     for i in range(int(clientcount)):  
-        threads.append( threading.Thread(target=execclient,args=(i,)))  
+        threads.append( threading.Thread(target=execclient,args=(i+int(clientbeginindex),)))  
     for t in threads:
         t.start()
     for t in threads:

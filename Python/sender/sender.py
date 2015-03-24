@@ -7,9 +7,9 @@ from threading import Thread
 
 # ipaddr = sys.argv[1]
 # port = sys.argv[2]
-ipaddr = "192.168.1.115"
-port = "10000"
-socket_count = 2000
+ipaddr = "192.168.1.155"
+port = "40000"
+socket_count = 800
 
 imeis = []
 file_content = file("E:/Code/scripts/Python/sender/imei.txt", "r")
@@ -82,6 +82,7 @@ create_socket(socket_count)
 connect_sockets(socket_count)
 send_login(socket_count)
 
+
 for i in range(0,socket_count):
     socket_buf.append("")
 time.sleep(1)
@@ -91,14 +92,14 @@ thread.start()
 
 while True:
     for i in range(0,socket_count):
-        socket_buf[i] = sockets[i].recv(128)
+        socket_buf[i] = sockets[i].recv(1024)
         start = socket_buf[i].find('$')
         end = socket_buf[i].find('\r\n')
         if end != -1:
             buf = socket_buf[i][start:end]
             socket_buf[i] = socket_buf[i][end:]
             if len(buf) > 25:
-                if buf.find("$LOGRT") != -1:
+                if buf.find("LOGRT") != -1:
                     print buf
                     # if buf[24] == '1':
                     #     print buf.strip("$LOGRT").strip("::1\r\n") + " login sucess"
@@ -106,7 +107,7 @@ while True:
                     #     print buf.strip("$LOGRT").strip("::0\r\n") + " login error"
                 if buf.find("$HCHECK") != -1:
                     send_heartbeat(i, buf[8:23])
-                if buf.find("POSP") != -1:
+                if buf.find("POS") != -1:
                     print buf[6:21] + "recv position reply"
 
 time.sleep(2)

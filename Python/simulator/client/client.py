@@ -50,6 +50,7 @@ def reqfunc(sock, index):
     bytes = bytearray(struct.pack(format, "$BDFS", 28,index, int(cardid), 0, 1,5,"cetcn"))
     sum = calcchecksum(bytes)
     bytes.append(sum)
+    sys.stdout.write(cardid)
     sys.stdout.write("send request ")
     print "send request"
     sock.send(bytes) 
@@ -58,11 +59,11 @@ def recvmsg(sock,event):
     while True:
         message = sock.recv(256)
         if message.find("$DWXX") != -1:
-            print "find position message."
+            print "%s find position message." % login
         elif message.find("$XTYD") != -1:
-            print "recv heart beat"
+            print "%s recv heart beat." % login
         elif message.find("$FSFK") != -1:
-            print "recv feedback message."
+            print "%s recv feedback message." % login
         else:
             sys.stdout.write(".........")
             print binascii.hexlify(message)

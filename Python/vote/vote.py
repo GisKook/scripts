@@ -4,7 +4,6 @@ import urllib
 import urllib2
 import cookielib
 
-
 def main():
     cj=cookielib.CookieJar()
     opener=urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
