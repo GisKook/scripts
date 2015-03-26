@@ -21,7 +21,7 @@ login = sys.argv[1]
 password = sys.argv[2]
 cardid = sys.argv[3]
 ipaddr="192.168.1.155"
-port = "40000"
+port = 30000
 
 def calcchecksum(bytes): 
     length = len(bytes)
@@ -112,9 +112,9 @@ def req(sock):
         
 def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-    rc = sock.connect_ex(("192.168.1.155", 40000))
+    rc = sock.connect_ex((ipaddr, port))
     if rc != 0:
-        print "connect error %s %d" %("192.168.1.155" ,40000)
+        print "connect error %s %d" %(ipaddr ,port)
         exit()
 
     event = Event()
