@@ -21,7 +21,7 @@ login = sys.argv[1]
 password = sys.argv[2]
 cardid = sys.argv[3]
 ipaddr="192.168.1.155"
-port = 30000
+port = 40000
 
 def calcchecksum(bytes): 
     length = len(bytes)
@@ -47,7 +47,7 @@ def heartbeat(sock, login):
 
 def reqfunc(sock, index):
     format = "> 5sHIIIBH5s"
-    bytes = bytearray(struct.pack(format, "$BDFS", 28,index, int(cardid), 0, 1,5,"cetcn"))
+    bytes = bytearray(struct.pack(format, "$BDFS", 28,index, int(cardid), 0, 2,5,"cetcn"))
     sum = calcchecksum(bytes)
     bytes.append(sum)
     sys.stdout.write(cardid)
@@ -108,7 +108,7 @@ def req(sock):
     while True:
         reqfunc(sock, index)
         index = index+1
-        time.sleep(1)
+        time.sleep(62)
         
 def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
