@@ -3,18 +3,18 @@ import urllib2
 import subprocess
 
 url = "http://www.google.com"
-localurl="./www.google.com/index.html"
+localurl="./www.baidu.com/index.html"
 
 def wgetbrowser():
     command=['/bin/bash','./myget.sh',url]
     subprocess.call(command)
 
 def openbrowseronline():
-    command=['chromium', '--kiosk', url]
+    command=['chromium-browser', '--kiosk', '--incognito', url]
     subprocess.call(command)
 
 def openbrowserlocal():
-    command=['chromium', '--kiosk', localurl]
+    command=['chromium-browser', '--kiosk', '--incognito',localurl]
     subprocess.call(command)
 
 
