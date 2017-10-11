@@ -19,6 +19,8 @@ def knet_do(data):
 		j = json.loads(data) 
 		if time.time() - j["knet"] > KNET_TIME_OUT:
 			return knet_restart()
+		if time.time() - j["sp"] > KNET_TIME_OUT:
+			return knet_restart()
 	else:
 		return knet_restart()
 
